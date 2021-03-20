@@ -37,7 +37,7 @@ $(document).ready(function(){
       });
     function searchForCurrentCityWeather(city) {
         currentWeatherContainer.html("");
-        var fullUrl = baseUrl + "q=" + city + "&appid=" + apiKey;
+        var fullUrl = baseUrl + "q=" + city + "&units=imperial" + "&appid=" + apiKey;
         console.log(fullUrl);
         fetch(fullUrl).then(function (response) {
                 return response.json();
@@ -60,7 +60,7 @@ $(document).ready(function(){
                 // stuff that goes in each div
                 cityNameDiv.text(cityName);
                 weatherDiv.attr("src" , iconUrl);
-                tempDiv.text("Temperature: " + temp);
+                tempDiv.text("Temperature: " + temp + " F");
                 humidityDiv.text("Humidity: " + humidity + "%");
                 windDiv.text("Wind Speed: " + wind.speed + " MPH");
                 // put it there!
@@ -76,7 +76,7 @@ $(document).ready(function(){
         fiveDayForeCastContainer.html("");
         // create URL for search
         currentWeatherContainer.html("");
-        var forecastUrl = baseUrl2 + "q=" + city + "&appid=" + apiKey;
+        var forecastUrl = baseUrl2 + "q=" + city + "&units=imperial" +  "&appid=" + apiKey;
         fetch(forecastUrl).then(function(responseFromOpenWeatherMapUnprocessed) {
            return responseFromOpenWeatherMapUnprocessed.json(); 
         }).then(function(data) {
@@ -109,7 +109,7 @@ $(document).ready(function(){
                     var windDiv = $('<div class="wind-name">');
                     weatherDiv.attr("src" , iconUrl);
                     dayDiv.text(day);
-                    tempDiv.text("Temperature: " + temp);
+                    tempDiv.text("Temperature: " + temp + " F");
                     humidityDiv.text("Humidity: " + humidity + "%");
                     windDiv.text("Wind Speed: " + wind.speed + " MPH");
                     // put info in the divs
@@ -126,15 +126,22 @@ $(document).ready(function(){
     function getUvIndex(lat, lon) {
         console.log(lat,lon);
         var finalUrl = uvIndexBaseUrl + "lat=" +  lat + "&lon=" + lon + "&exclude=hourly,daily&appid=" + apiKey;
-        fetch(finalUrl).then(function() {
+        fetch(finalUrl).then(function(response) {
             return response.json();
         }).then(function(data) {
             console.log("UV DATA" , data);
             var uvIndex = data.current.uvi;
-            var uvIndexDiv = $('<div class="uv-index-div">');
+            var uvIndexDiv = $('<h3 class="uv-index-div">');
             var uvIndexSpan = $('<span class="uv-index-number">');
+            if (uvIndex < 2) {
+                uvIndexSpan.addClass("uv-index-number-low")
+            } else if (2 < uvIndex < 5) {
+                uvIndexSpan.addClass("uv-index-number-med")
+            } else if (uvIndex > 5) {
+                uvIndexSpan.addClass("uv-index-number-high")
+            }
             uvIndexSpan.text(uvIndex);
-            uvIndexDiv.text("UV Index: " + uvIndex);
+            uvIndexDiv.text("UV Index: ");
             uvIndexDiv.append(uvIndexSpan);
             currentWeatherContainer.append(uvIndexDiv);
         });
@@ -142,22 +149,23 @@ $(document).ready(function(){
     function retrieveSearchHistory() {
         if (localStorage.getItem("searchHistory")) {
             searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
-            for (var i = 0; i <searchHistory.length; i++) {
+            for (var i = 0; i < searchHistory.length; i++) {
                 var searchTermDiv = $('<button type="button" class="btn past-search-term">');
                 searchTermDiv.click(function(event) {
                     event.preventDefault();
                     var value = $(this).text;
+                    console.log(value);
                     searchForCurrentCityWeather(value);
                     searchForFiveDayForecastWeather(value);
                 });
-                searchForm.text(searchHistory[i]);
+                searchTermDiv.text(searchHistory[i]);
                 searchHistoryContainer.append(searchTermDiv);
             }
         }
     }
-    $(".past-search-term").click(function(event) {
-        event.preventDefault();
-        console.log(event.target);
-    });
+    // $(".past-search-term").click(function(event) {
+    //     event.preventDefault();
+    //     console.log(event.target);
+    // });
     retrieveSearchHistory();
 });

@@ -1,9 +1,23 @@
 h1 {
-    color:teal;
+    color: whitesmoke;
     text-align: center;
-    background-color: rosybrown;
+    background-color: dodgerblue;
 }
 
-.uv-index-number {
+.uv-index-number-high {
     background-color: red;
+    color: whitesmoke;
+}
+
+.uv-index-number-med {
+    background-color: yellow;
+}
+.uv-index-number-low {
+    background-color: yellowgreen;
+}
+
+#past-searches {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
 }
