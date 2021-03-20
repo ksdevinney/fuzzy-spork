@@ -137,9 +137,9 @@ $(document).ready(function(){
             var uvIndexSpan = $('<span class="uv-index-number">');
             if (uvIndex < 2) {
                 uvIndexSpan.addClass("uv-index-number-low")
-            } else if (2 < uvIndex < 5) {
+            } else if (uvIndex < 5) {
                 uvIndexSpan.addClass("uv-index-number-med")
-            } else if (uvIndex > 5) {
+            } else {
                 uvIndexSpan.addClass("uv-index-number-high")
             }
             uvIndexSpan.text(uvIndex);

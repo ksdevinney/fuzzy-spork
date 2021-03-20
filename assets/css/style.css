@@ -11,6 +11,7 @@ h1 {
 .uv-index-number-high {
     background-color: red;
     color: whitesmoke;
+    padding: 2px
 }
 
 .uv-index-number-med {
