@@ -1,3 +1,9 @@
 h1 {
     color:teal;
+    text-align: center;
+    background-color: rosybrown;
+}
+
+.uv-index-number {
+    background-color: red;
 }

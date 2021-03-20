@@ -7,20 +7,36 @@ $(document).ready(function(){
     var fiveDayForeCastContainer = $("#five-day-forecast");
     var baseUrl2 = "https://api.openweathermap.org/data/2.5/forecast?";
     var iconBaseUrl = "http://openweathermap.org/img/w/"
+    var searchHistory = [];
+    var searchValueInput = $("#search-value");
+    var uvIndexBaseUrl = "https://api.openweathermap.org/data/2.5/onecall?"
+    
+    // search for a location
     searchForm.submit(function(event) {
         event.preventDefault();
         // this = the form that just submitted!
         var formValues = $(this).serializeArray();
         var city = formValues[0].value;
-        // create an element with jquery selector
-        var searchTermDiv = $('<div class="past-search-term">');
+        // previously searched cities go in a button
+        var searchTermDiv = $('<button type="button" class="btn past-search-term">');
+        searchTermDiv.click(function(event) {
+            event.preventDefault();
+            var value = $(this).text;
+            searchForCurrentCityWeather(value);
+            searchForFiveDayForecastWeather(value);
+            console.log(value);
+        });
+        searchHistory.push(city);
+        localStorage.setItem("searchHistory" , JSON.stringify(searchHistory));
         searchTermDiv.text(city);
         searchHistoryContainer.append(searchTermDiv);
         console.log(formValues, city);
         searchForCurrentCityWeather(city);
         searchForFiveDayForecastWeather(city);
+        searchValueInput.val("");
       });
     function searchForCurrentCityWeather(city) {
+        currentWeatherContainer.html("");
         var fullUrl = baseUrl + "q=" + city + "&appid=" + apiKey;
         console.log(fullUrl);
         fetch(fullUrl).then(function (response) {
@@ -44,9 +60,9 @@ $(document).ready(function(){
                 // stuff that goes in each div
                 cityNameDiv.text(cityName);
                 weatherDiv.attr("src" , iconUrl);
-                tempDiv.text(temp);
-                humidityDiv.text(humidity + "%");
-                windDiv.text(wind.speed + " MPH");
+                tempDiv.text("Temperature: " + temp);
+                humidityDiv.text("Humidity: " + humidity + "%");
+                windDiv.text("Wind Speed: " + wind.speed + " MPH");
                 // put it there!
                 currentWeatherContainer.append(cityNameDiv);
                 currentWeatherContainer.append(tempDiv);
@@ -57,13 +73,18 @@ $(document).ready(function(){
     };
     // five day forecast
     function searchForFiveDayForecastWeather(city) {
+        fiveDayForeCastContainer.html("");
         // create URL for search
+        currentWeatherContainer.html("");
         var forecastUrl = baseUrl2 + "q=" + city + "&appid=" + apiKey;
         fetch(forecastUrl).then(function(responseFromOpenWeatherMapUnprocessed) {
            return responseFromOpenWeatherMapUnprocessed.json(); 
         }).then(function(data) {
-            // loop through 5 day forecast data
             console.log("Five Day Forecast" , data);
+            var coords = data.city.coord;
+            console.log(coords);
+            getUvIndex(coords.lat, coords.lon);
+            // loop through 5 day forecast data
             for (var i=0; i < data.list.length; i++) {
                 // only use weather at 3 pm
                 var isThreeOClock = data.list[i].dt_txt.search("15:00:00");
@@ -88,9 +109,9 @@ $(document).ready(function(){
                     var windDiv = $('<div class="wind-name">');
                     weatherDiv.attr("src" , iconUrl);
                     dayDiv.text(day);
-                    tempDiv.text(temp);
-                    humidityDiv.text(humidity + "%");
-                    windDiv.text(wind.speed + " MPH");
+                    tempDiv.text("Temperature: " + temp);
+                    humidityDiv.text("Humidity: " + humidity + "%");
+                    windDiv.text("Wind Speed: " + wind.speed + " MPH");
                     // put info in the divs
                     rowDiv.append(weatherDiv);
                     rowDiv.append(dayDiv);
@@ -102,4 +123,41 @@ $(document).ready(function(){
             }
         });
     }
+    function getUvIndex(lat, lon) {
+        console.log(lat,lon);
+        var finalUrl = uvIndexBaseUrl + "lat=" +  lat + "&lon=" + lon + "&exclude=hourly,daily&appid=" + apiKey;
+        fetch(finalUrl).then(function() {
+            return response.json();
+        }).then(function(data) {
+            console.log("UV DATA" , data);
+            var uvIndex = data.current.uvi;
+            var uvIndexDiv = $('<div class="uv-index-div">');
+            var uvIndexSpan = $('<span class="uv-index-number">');
+            uvIndexSpan.text(uvIndex);
+            uvIndexDiv.text("UV Index: " + uvIndex);
+            uvIndexDiv.append(uvIndexSpan);
+            currentWeatherContainer.append(uvIndexDiv);
+        });
+    }
+    function retrieveSearchHistory() {
+        if (localStorage.getItem("searchHistory")) {
+            searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+            for (var i = 0; i <searchHistory.length; i++) {
+                var searchTermDiv = $('<button type="button" class="btn past-search-term">');
+                searchTermDiv.click(function(event) {
+                    event.preventDefault();
+                    var value = $(this).text;
+                    searchForCurrentCityWeather(value);
+                    searchForFiveDayForecastWeather(value);
+                });
+                searchForm.text(searchHistory[i]);
+                searchHistoryContainer.append(searchTermDiv);
+            }
+        }
+    }
+    $(".past-search-term").click(function(event) {
+        event.preventDefault();
+        console.log(event.target);
+    });
+    retrieveSearchHistory();
 });
