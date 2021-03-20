@@ -21,7 +21,7 @@ $(document).ready(function(){
         var searchTermDiv = $('<button type="button" class="btn past-search-term">');
         searchTermDiv.click(function(event) {
             event.preventDefault();
-            var value = $(this).text;
+            var value = $(this).text();
             searchForCurrentCityWeather(value);
             searchForFiveDayForecastWeather(value);
             console.log(value);
@@ -153,7 +153,7 @@ $(document).ready(function(){
                 var searchTermDiv = $('<button type="button" class="btn past-search-term">');
                 searchTermDiv.click(function(event) {
                     event.preventDefault();
-                    var value = $(this).text;
+                    var value = $(this).text();
                     console.log(value);
                     searchForCurrentCityWeather(value);
                     searchForFiveDayForecastWeather(value);
