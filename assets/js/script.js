@@ -2,6 +2,7 @@ $(document).ready(function(){
     var searchHistoryContainer = $("#past-searches");
     var searchForm = $("#search-form");
     var currentWeatherContainer = $("#current-weather");
+    // var dateContainer = $("current-date");
     var apiKey = "6291995da3ff0287da0ec9ee69a1e3a7";
     var baseUrl = "https://api.openweathermap.org/data/2.5/weather?";
     var fiveDayForeCastContainer = $("#five-day-forecast");
@@ -36,6 +37,7 @@ $(document).ready(function(){
         searchValueInput.val("");
       });
     function searchForCurrentCityWeather(city) {
+        // dateContainer.text(moment().format("dddd, MMMM Do, YYYY"));
         currentWeatherContainer.html("");
         var fullUrl = baseUrl + "q=" + city + "&units=imperial" + "&appid=" + apiKey;
         console.log(fullUrl);
@@ -53,21 +55,21 @@ $(document).ready(function(){
                 console.log(data);
                 // create text for each part of the weather
                 var cityNameDiv = $('<h3 class="city-name">');
-                var tempDiv = $('<h3 class="temp-name">');
-                var humidityDiv = $('<h3 class="humidity-name">');
                 var weatherDiv = $('<img class="icon-name">');
-                var windDiv = $('<h3 class="wind-name">');
+                var tempDiv = $('<h5 class="temp-name">');
+                var humidityDiv = $('<h5 class="humidity-name">');
+                var windDiv = $('<h5 class="wind-name">');
                 // stuff that goes in each div
                 cityNameDiv.text(cityName);
                 weatherDiv.attr("src" , iconUrl);
-                tempDiv.text("Temperature: " + temp + " F");
+                tempDiv.text("Temperature: " + temp + " °F");
                 humidityDiv.text("Humidity: " + humidity + "%");
                 windDiv.text("Wind Speed: " + wind.speed + " MPH");
                 // put it there!
                 currentWeatherContainer.append(cityNameDiv);
+                currentWeatherContainer.append(weatherDiv);
                 currentWeatherContainer.append(tempDiv);
                 currentWeatherContainer.append(humidityDiv);
-                currentWeatherContainer.append(weatherDiv);
                 currentWeatherContainer.append(windDiv);
             });
     };
@@ -109,7 +111,7 @@ $(document).ready(function(){
                     var windDiv = $('<div class="wind-name">');
                     weatherDiv.attr("src" , iconUrl);
                     dayDiv.text(day);
-                    tempDiv.text("Temperature: " + temp + " F");
+                    tempDiv.text("Temperature: " + temp + " °F");
                     humidityDiv.text("Humidity: " + humidity + "%");
                     windDiv.text("Wind Speed: " + wind.speed + " MPH");
                     // put info in the divs
@@ -131,7 +133,7 @@ $(document).ready(function(){
         }).then(function(data) {
             console.log("UV DATA" , data);
             var uvIndex = data.current.uvi;
-            var uvIndexDiv = $('<h3 class="uv-index-div">');
+            var uvIndexDiv = $('<h5 class="uv-index-div">');
             var uvIndexSpan = $('<span class="uv-index-number">');
             if (uvIndex < 2) {
                 uvIndexSpan.addClass("uv-index-number-low")
@@ -163,9 +165,5 @@ $(document).ready(function(){
             }
         }
     }
-    // $(".past-search-term").click(function(event) {
-    //     event.preventDefault();
-    //     console.log(event.target);
-    // });
     retrieveSearchHistory();
 });
