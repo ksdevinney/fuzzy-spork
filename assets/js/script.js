@@ -3,7 +3,7 @@ $(document).ready(function(){
     var searchForm = $("#search-form");
     var currentWeatherContainer = $("#current-weather");
     // var dateContainer = $("current-date");
-    var apiKey = "6291995da3ff0287da0ec9ee69a1e3a7";
+    // var apiKey = " "; removed for privacy
     var baseUrl = "https://api.openweathermap.org/data/2.5/weather?";
     var fiveDayForeCastContainer = $("#five-day-forecast");
     var baseUrl2 = "https://api.openweathermap.org/data/2.5/forecast?";
@@ -133,6 +133,7 @@ $(document).ready(function(){
         }).then(function(data) {
             console.log("UV DATA" , data);
             var uvIndex = data.current.uvi;
+            console.log(uvIndex, typeof uvIndex)
             var uvIndexDiv = $('<h5 class="uv-index-div">');
             var uvIndexSpan = $('<span class="uv-index-number">');
             if (uvIndex < 2) {
