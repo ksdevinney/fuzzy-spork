@@ -1,28 +1,28 @@
 $(document).ready(function(){
-    var searchHistoryContainer = $("#past-searches");
-    var searchForm = $("#search-form");
-    var currentWeatherContainer = $("#current-weather");
-    // var dateContainer = $("current-date");
-    // var apiKey = " "; removed for privacy
-    var baseUrl = "https://api.openweathermap.org/data/2.5/weather?";
-    var fiveDayForeCastContainer = $("#five-day-forecast");
-    var baseUrl2 = "https://api.openweathermap.org/data/2.5/forecast?";
-    var iconBaseUrl = "http://openweathermap.org/img/w/"
-    var searchHistory = [];
-    var searchValueInput = $("#search-value");
-    var uvIndexBaseUrl = "https://api.openweathermap.org/data/2.5/onecall?"
+    let searchHistoryContainer = $("#past-searches");
+    let searchForm = $("#search-form");
+    let currentWeatherContainer = $("#current-weather");
+    // let dateContainer = $("current-date");
+    // let apiKey = " "; removed for privacy
+    let baseUrl = "https://api.openweathermap.org/data/2.5/weather?";
+    let fiveDayForeCastContainer = $("#five-day-forecast");
+    let baseUrl2 = "https://api.openweathermap.org/data/2.5/forecast?";
+    let iconBaseUrl = "http://openweathermap.org/img/w/"
+    let searchHistory = [];
+    let searchValueInput = $("#search-value");
+    let uvIndexBaseUrl = "https://api.openweathermap.org/data/2.5/onecall?"
     
     // search for a location
     searchForm.submit(function(event) {
         event.preventDefault();
         // this = the form that just submitted!
-        var formValues = $(this).serializeArray();
-        var city = formValues[0].value;
+        let formValues = $(this).serializeArray();
+        let city = formValues[0].value;
         // previously searched cities go in a button
-        var searchTermDiv = $('<button type="button" class="btn past-search-term">');
+        let searchTermDiv = $('<button type="button" class="btn past-search-term">');
         searchTermDiv.click(function(event) {
             event.preventDefault();
-            var value = $(this).text();
+            let value = $(this).text();
             searchForCurrentCityWeather(value);
             searchForFiveDayForecastWeather(value);
             console.log(value);
@@ -39,26 +39,26 @@ $(document).ready(function(){
     function searchForCurrentCityWeather(city) {
         // dateContainer.text(moment().format("dddd, MMMM Do, YYYY"));
         currentWeatherContainer.html("");
-        var fullUrl = baseUrl + "q=" + city + "&units=imperial" + "&appid=" + apiKey;
+        let fullUrl = baseUrl + "q=" + city + "&units=imperial" + "&appid=" + apiKey;
         console.log(fullUrl);
         fetch(fullUrl).then(function (response) {
                 return response.json();
             })
             .then(function (data) {
                 // vars for current weather
-                var cityName = data.name;
-                var temp = data.main.temp;
-                var humidity = data.main.humidity;
-                var weather = data.weather;
-                var iconUrl = iconBaseUrl + weather[0].icon + ".png";
-                var wind = data.wind;
+                let cityName = data.name;
+                let temp = data.main.temp;
+                let humidity = data.main.humidity;
+                let weather = data.weather;
+                let iconUrl = iconBaseUrl + weather[0].icon + ".png";
+                let wind = data.wind;
                 console.log(data);
                 // create text for each part of the weather
-                var cityNameDiv = $('<h3 class="city-name">');
-                var weatherDiv = $('<img class="icon-name">');
-                var tempDiv = $('<h5 class="temp-name">');
-                var humidityDiv = $('<h5 class="humidity-name">');
-                var windDiv = $('<h5 class="wind-name">');
+                let cityNameDiv = $('<h3 class="city-name">');
+                let weatherDiv = $('<img class="icon-name">');
+                let tempDiv = $('<h5 class="temp-name">');
+                let humidityDiv = $('<h5 class="humidity-name">');
+                let windDiv = $('<h5 class="wind-name">');
                 // stuff that goes in each div
                 cityNameDiv.text(cityName);
                 weatherDiv.attr("src" , iconUrl);
@@ -78,37 +78,37 @@ $(document).ready(function(){
         fiveDayForeCastContainer.html("");
         // create URL for search
         currentWeatherContainer.html("");
-        var forecastUrl = baseUrl2 + "q=" + city + "&units=imperial" +  "&appid=" + apiKey;
+        let forecastUrl = baseUrl2 + "q=" + city + "&units=imperial" +  "&appid=" + apiKey;
         fetch(forecastUrl).then(function(responseFromOpenWeatherMapUnprocessed) {
            return responseFromOpenWeatherMapUnprocessed.json(); 
         }).then(function(data) {
             console.log("Five Day Forecast" , data);
-            var coords = data.city.coord;
+            let coords = data.city.coord;
             console.log(coords);
             getUvIndex(coords.lat, coords.lon);
             // loop through 5 day forecast data
-            for (var i=0; i < data.list.length; i++) {
+            for (let i=0; i < data.list.length; i++) {
                 // only use weather at 3 pm
-                var isThreeOClock = data.list[i].dt_txt.search("15:00:00");
-                var cityName = data.city.name;
+                let isThreeOClock = data.list[i].dt_txt.search("15:00:00");
+                let cityName = data.city.name;
                 if (isThreeOClock > -1) {
-                    // vars for five day forecast
-                    var forecast = data.list[i];
-                    var temp = forecast.main.temp;
-                    var humidity = forecast.main.humidity;
-                    var weather = forecast.weather;
+                    // variables for five day forecast
+                    let forecast = data.list[i];
+                    let temp = forecast.main.temp;
+                    let humidity = forecast.main.humidity;
+                    let weather = forecast.weather;
                     // create a url for the weather icon
-                    var iconUrl = iconBaseUrl + weather[0].icon + ".png";
-                    var wind = forecast.wind;
-                    var day = moment(forecast.dt_txt).format("dddd, MMMM Do");
+                    let iconUrl = iconBaseUrl + weather[0].icon + ".png";
+                    let wind = forecast.wind;
+                    let day = moment(forecast.dt_txt).format("dddd, MMMM Do");
                     console.log(forecast, temp, humidity, weather, wind, day);
                     // create divs for necessary data
-                    var rowDiv = $('<div class="col-2">' );
-                    var dayDiv = $('<div class="day-name">');
-                    var tempDiv = $('<div class="temp-name">');
-                    var humidityDiv = $('<div class="humidity-name">');
-                    var weatherDiv = $('<img class="icon-name">');
-                    var windDiv = $('<div class="wind-name">');
+                    let rowDiv = $('<div class="col-2">' );
+                    let dayDiv = $('<div class="day-name">');
+                    let tempDiv = $('<div class="temp-name">');
+                    let humidityDiv = $('<div class="humidity-name">');
+                    let weatherDiv = $('<img class="icon-name">');
+                    let windDiv = $('<div class="wind-name">');
                     weatherDiv.attr("src" , iconUrl);
                     dayDiv.text(day);
                     tempDiv.text("Temperature: " + temp + " °F");
@@ -127,15 +127,15 @@ $(document).ready(function(){
     }
     function getUvIndex(lat, lon) {
         console.log(lat,lon);
-        var finalUrl = uvIndexBaseUrl + "lat=" +  lat + "&lon=" + lon + "&exclude=hourly,daily&appid=" + apiKey;
+        let finalUrl = uvIndexBaseUrl + "lat=" +  lat + "&lon=" + lon + "&exclude=hourly,daily&appid=" + apiKey;
         fetch(finalUrl).then(function(response) {
             return response.json();
         }).then(function(data) {
             console.log("UV DATA" , data);
-            var uvIndex = data.current.uvi;
+            let uvIndex = data.current.uvi;
             console.log(uvIndex, typeof uvIndex)
-            var uvIndexDiv = $('<h5 class="uv-index-div">');
-            var uvIndexSpan = $('<span class="uv-index-number">');
+            let uvIndexDiv = $('<h5 class="uv-index-div">');
+            let uvIndexSpan = $('<span class="uv-index-number">');
             if (uvIndex < 2) {
                 uvIndexSpan.addClass("uv-index-number-low")
             } else if (uvIndex < 5) {
@@ -152,11 +152,11 @@ $(document).ready(function(){
     function retrieveSearchHistory() {
         if (localStorage.getItem("searchHistory")) {
             searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
-            for (var i = 0; i < searchHistory.length; i++) {
-                var searchTermDiv = $('<button type="button" class="btn past-search-term">');
+            for (let i = 0; i < searchHistory.length; i++) {
+                let searchTermDiv = $('<button type="button" class="btn past-search-term">');
                 searchTermDiv.click(function(event) {
                     event.preventDefault();
-                    var value = $(this).text();
+                    let value = $(this).text();
                     console.log(value);
                     searchForCurrentCityWeather(value);
                     searchForFiveDayForecastWeather(value);
