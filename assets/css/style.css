@@ -26,3 +26,13 @@ h1 {
     flex: auto;
     flex-direction: column;
 }
+
+.day-name-five {
+    font-weight: 500;
+    /* text-align: center; */
+}
+
+.temp-name-five, .wind-name-five, .humidity-name-five {
+    font-weight: 100;
+    /* text-align: center; */
+}

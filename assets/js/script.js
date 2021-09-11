@@ -3,7 +3,7 @@ $(document).ready(function(){
     let searchForm = $("#search-form");
     let currentWeatherContainer = $("#current-weather");
     // let dateContainer = $("current-date");
-    // let apiKey = " "; removed for privacy
+    let apiKey = "9e978b8e79ed54c3ad45d52c5826e0d8"; //removed for privacy
     let baseUrl = "https://api.openweathermap.org/data/2.5/weather?";
     let fiveDayForeCastContainer = $("#five-day-forecast");
     let baseUrl2 = "https://api.openweathermap.org/data/2.5/forecast?";
@@ -90,7 +90,7 @@ $(document).ready(function(){
             for (let i=0; i < data.list.length; i++) {
                 // only use weather at 3 pm
                 let isThreeOClock = data.list[i].dt_txt.search("15:00:00");
-                let cityName = data.city.name;
+                // let cityName = data.city.name;
                 if (isThreeOClock > -1) {
                     // variables for five day forecast
                     let forecast = data.list[i];
@@ -103,12 +103,12 @@ $(document).ready(function(){
                     let day = moment(forecast.dt_txt).format("dddd, MMMM Do");
                     console.log(forecast, temp, humidity, weather, wind, day);
                     // create divs for necessary data
-                    let rowDiv = $('<div class="col-2">' );
-                    let dayDiv = $('<div class="day-name">');
-                    let tempDiv = $('<div class="temp-name">');
-                    let humidityDiv = $('<div class="humidity-name">');
+                    let rowDiv = $('<div class="col-2 border border-dark">' );
+                    let dayDiv = $('<div class="day-name day-name-five">');
+                    let tempDiv = $('<div class="temp-name temp-name-five">');
+                    let humidityDiv = $('<div class="humidity-name humidity-name-five">');
                     let weatherDiv = $('<img class="icon-name">');
-                    let windDiv = $('<div class="wind-name">');
+                    let windDiv = $('<div class="wind-name wind-name-five">');
                     weatherDiv.attr("src" , iconUrl);
                     dayDiv.text(day);
                     tempDiv.text("Temperature: " + temp + " °F");
@@ -153,7 +153,7 @@ $(document).ready(function(){
         if (localStorage.getItem("searchHistory")) {
             searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
             for (let i = 0; i < searchHistory.length; i++) {
-                let searchTermDiv = $('<button type="button" class="btn past-search-term">');
+                let searchTermDiv = $('<button type="button" class="btn btn-outline-secondary past-search-term">');
                 searchTermDiv.click(function(event) {
                     event.preventDefault();
                     let value = $(this).text();
