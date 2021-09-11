@@ -3,7 +3,7 @@ $(document).ready(function(){
     let searchForm = $("#search-form");
     let currentWeatherContainer = $("#current-weather");
     // let dateContainer = $("current-date");
-    let apiKey = "9e978b8e79ed54c3ad45d52c5826e0d8"; //removed for privacy
+    // let apiKey = " "; removed for privacy
     let baseUrl = "https://api.openweathermap.org/data/2.5/weather?";
     let fiveDayForeCastContainer = $("#five-day-forecast");
     let baseUrl2 = "https://api.openweathermap.org/data/2.5/forecast?";
