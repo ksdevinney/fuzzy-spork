@@ -2,7 +2,6 @@ $(document).ready(function(){
     let searchHistoryContainer = $("#past-searches");
     let searchForm = $("#search-form");
     let currentWeatherContainer = $("#current-weather");
-    // let dateContainer = $("current-date");
     // let apiKey = " "; removed for privacy
     let baseUrl = "https://api.openweathermap.org/data/2.5/weather?";
     let fiveDayForeCastContainer = $("#five-day-forecast");
@@ -59,7 +58,7 @@ $(document).ready(function(){
                 let tempDiv = $('<h5 class="temp-name">');
                 let humidityDiv = $('<h5 class="humidity-name">');
                 let windDiv = $('<h5 class="wind-name">');
-                // stuff that goes in each div
+                // data that goes in each div
                 cityNameDiv.text(cityName);
                 weatherDiv.attr("src" , iconUrl);
                 tempDiv.text("Temperature: " + temp + " °F");
